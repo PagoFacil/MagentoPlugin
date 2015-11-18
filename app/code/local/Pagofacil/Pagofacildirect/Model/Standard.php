@@ -96,7 +96,7 @@ class Pagofacil_Pagofacildirect_Model_Standard extends Mage_Payment_Model_Method
         $orderNumber = $order->getIncrementId();        
         
         // obtener datos del pago en info y asignar monto total
-        $infoIntance = $this->getInfoInstance();
+        $infoInstance = $this->getInfoInstance();
         $info = unserialize($infoInstance->decrypt($infoInstance->getAdditionalData()));
 		
         $info['idPedido'] = $orderNumber;
