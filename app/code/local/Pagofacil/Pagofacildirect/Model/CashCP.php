@@ -170,25 +170,46 @@ class Pagofacil_Pagofacildirect_Model_CashCP extends Mage_Payment_Model_Method_A
     
     public function getProviders()
     {
-        $url = 'http://api-compropago.herokuapp.com/v1/providers/'; 
-        $url.= 'true';        
-        $username = 'pk_live_508992456a45414a9';
+        $url = 'https://api.compropago.com/v1/providers/';
+        $url.= 'true';
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($ch, CURLOPT_USERPWD, $username . ":");
-
-        // Blindly accept the certificate.
+        curl_setopt($ch, CURLOPT_USERPWD, ":");
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $this->_response = curl_exec($ch);
         curl_close($ch);
 
-        // tratamiento de la respuesta del servicio.
-        $response = json_decode($this->_response,true);
-          
-        return $response;
+        $response = json_decode($this->_response, true);
+
+        if ($response['type'] == "error") {
+            $errorMessage = $response['message'] . "\n";
+            Mage::throwException($errorMessage);
+        }
+
+        $hash = array();
+
+        foreach ($response as $record) {
+            $hash[$record['rank']] = $record;
+        }
+
+        ksort($hash);
+
+        $records = array();
+
+        foreach ($hash as $record) {
+            $records[] = $record;
+        }
+        $storeConveinience = array("OXXO", "SEVEN_ELEVEN", "FARMACIA_ESQUIVAR", "EXTRA", "FARMACIA_ESQUIVAR", "CHEDRAUI");
+        foreach ($records as $id => $record) {
+            if (!in_array($record["internal_name"], $storeConveinience)) {
+                unset($records[$id]);
+            }
+        }
+
+        return $records;
     }   
 }
 
