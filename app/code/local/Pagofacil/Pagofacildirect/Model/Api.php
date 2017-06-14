@@ -11,7 +11,7 @@ class Pagofacil_Pagofacildirect_Model_Api
      * URL del servicio de PagoFacil para pruebas
      * @var string
      */
-    protected $_urlDemo = 'https://www.pagofacil.net/st/public/Wsrtransaccion/index/format/json';
+    protected $_urlDemo = 'https://api.pagofacil.net/Wsrtransaccion/index/format/json';
     
     /**
      * URL del servicio de PagoFacil en ambiente de produccion
@@ -151,7 +151,7 @@ class Pagofacil_Pagofacildirect_Model_Api
         // determinar si el entorno es para pruebas
         if ($info['prod'] == '0')
         {
-            $info['url'] = 'https://www.pagofacil.net/st/public/cash/charge';
+            $info['url'] = 'https://api.pagofacil.net/cash/charge';
             $info['branch_key'] = $this->_sucursalKeyDemo;
             $info['user_key'] = $this->_usuarioKeyDemo;
         }
