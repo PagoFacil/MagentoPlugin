@@ -27,6 +27,13 @@
                 <pagofacildirect>pagofacil</pagofacildirect>
             </groups>
         </payment>
+        <blocks>
+            <checkout>
+                <rewrite>
+                    <onepage>Pagofacil_Pagofacildirect_Block_Checkout_Onepage</onepage>
+                </rewrite>
+            </checkout>
+        </blocks>
         <events>
             <sales_order_place_after>
                 <observers>
