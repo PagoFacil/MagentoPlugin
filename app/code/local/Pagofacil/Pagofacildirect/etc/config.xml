@@ -21,7 +21,7 @@
             <pagofacildirect>
                 <class>Pagofacil_Pagofacildirect_Block</class>
             </pagofacildirect>
-        </blocks>                
+        </blocks>
         <payment>
             <groups>
                 <pagofacildirect>pagofacil</pagofacildirect>

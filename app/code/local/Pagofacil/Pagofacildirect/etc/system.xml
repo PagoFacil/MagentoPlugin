@@ -64,6 +64,14 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </usuariokey>
+                        <encriptacionkey translate="label">
+                            <label>Llave de cifradp</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </encriptacionkey>
                         <notify translate="label">
                             <label><![CDATA[Enviar Notificaci&oacute;n]]></label>
                             <frontend_type>select</frontend_type>

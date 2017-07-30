@@ -4,12 +4,7 @@
  * Verifica si existe 3ds configurado en el admin
  */
 $tdConfigurada = Mage::helper('pagofacildirect/Data')->verificaTDSecureConfig();
-//$showAction = (!$tdConfigurada)?'review.save();':'enviarPagoFacil3dSecure();';
 
-/*
- * Trae los datos adicionales antes de realizar el envio por 3ds
- */
-$infoAdicional='';
 $tdConfigurada = ($tdConfigurada == '1')?Mage::helper('pagofacildirect/Data')->datosAdicionalesTreeD():$tdConfigurada;
 
 $form_key = $this->getRequest()->getParam('form_key');
@@ -19,7 +14,7 @@ $showAction = (!$tdConfigurada)?'review.save();':'enviarPagoFacil3dSecure('.$amb
 
 ?>
 
-<button type="submit" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Place Order')) ?>" class="button btn-checkout" onclick="<?php echo $showAction ?>"><span><span><?php echo $this->__('Place Order Miguelito') ?></span></span></button>
+<button type="submit" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Place Order')) ?>" class="button btn-checkout" onclick="<?php echo $showAction ?>"><span><span><?php echo $this->__('Place Order') ?></span></span></button>
 
 <script type="text/javascript">
 
@@ -50,7 +45,7 @@ $showAction = (!$tdConfigurada)?'review.save();':'enviarPagoFacil3dSecure('.$amb
 	var input = document.createElement("input");
 	input.setAttribute("type", "hidden");
 	input.setAttribute("name", "param2");
-	input.setAttribute("value", "<?php echo '1' ?>");
+	input.setAttribute("value", "param2");
 	document.getElementById("co-payment-form").appendChild(input);
 
 	var input = document.createElement("input");
@@ -92,7 +87,7 @@ $showAction = (!$tdConfigurada)?'review.save();':'enviarPagoFacil3dSecure('.$amb
 	var input = document.createElement("input");
 	input.setAttribute("type", "hidden");
 	input.setAttribute("name", "noTransaccion");
-	input.setAttribute("value", "<?php  ?>");
+	input.setAttribute("value", "noTransaccion");
 	document.getElementById("co-payment-form").appendChild(input);
 
 </script>

@@ -9,8 +9,7 @@ function enviarPagoFacil3dSecure(ambiente){
     var d1 = dres.replace(/numero_tarjeta/g, "numeroTarjeta");
     var d2 = d1.replace(/mes_expiracion/g, "mesExpiracion");
     var d3 = d2.replace(/anyo_expiracion/g, "anyoExpiracion");
-    var d4 = d3.replace(/anyo_expiracion/g, "anyoExpiracion");
-    var d5 = d4.replace(/method=pagofacildirect&/g, "");
+    var d5 = d3.replace(/method=pagofacildirect&/g, "");
     var campos = d5.replace(/calley_numero/g, "calleyNumero");
     var params = Base64.encode(campos);
  
@@ -19,12 +18,10 @@ function enviarPagoFacil3dSecure(ambiente){
         	//1 produccion
             var send = 'https://pagofacil.net/ws/public/B3DS/Index/index';
         break;
-        case "sandbox":
+        case "2":
         	//2 sanbox
             var send = 'https://stapi.pagofacil.net/B3DS/Index/index';
         break;
-        default:
-            var send = 'http://core-pci.dev/B3DS/Index/index';
     }
 
     document.body.innerHTML += '<form id="sendForm" action="'+send+'" method="post"><input type="hidden" name="contenido" value='+params+' id='+params+'></form>';

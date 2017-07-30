@@ -31,4 +31,13 @@ class Pagofacil_Pagofacildirect_Helper_Data extends Mage_Core_Helper_Abstract
         return $this->tdsecure->addDataTreeDSecure();
     }
 
+    /**
+     * Verifica la llave de cifrado configurada en Admin para la desencriptacion de datos
+     * return String
+     **/
+    public function keyEncrypted()
+    {
+        return $this->tdsecure->encryptedKey();
+    }
+
 }
