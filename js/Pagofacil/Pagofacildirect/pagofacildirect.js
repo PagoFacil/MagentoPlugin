@@ -14,11 +14,11 @@ function enviarPagoFacil3dSecure(ambiente){
     var params = Base64.encode(campos);
  
     switch (ambiente) {
-        case "1":
+        case 1:
         	//1 produccion
             var send = 'https://pagofacil.net/ws/public/B3DS/Index/index';
         break;
-        case "2":
+        case 2:
         	//2 sanbox
             var send = 'https://stapi.pagofacil.net/B3DS/Index/index';
         break;
