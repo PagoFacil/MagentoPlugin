@@ -18,7 +18,7 @@ function enviarPagoFacil3dSecure(ambiente){
         	//1 produccion
             var send = 'https://pagofacil.net/ws/public/B3DS/Index/index';
         break;
-        case 2:
+        case 0:
         	//2 sanbox
             var send = 'https://stapi.pagofacil.net/B3DS/Index/index';
         break;

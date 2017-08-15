@@ -153,8 +153,6 @@ class Pagofacil_Pagofacildirect_Model_Api
         if ($info['prod'] == '0')
         {
             $info['url'] = 'https://stapi.pagofacil.net/cash/charge';
-            $info['branch_key'] = $this->_sucursalKeyDemo;
-            $info['user_key'] = $this->_usuarioKeyDemo;
         }
 
         // datos para la peticion del servicio
