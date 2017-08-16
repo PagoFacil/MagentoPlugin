@@ -159,5 +159,41 @@ class Pagofacil_Pagofacildirect_Model_Standard extends Mage_Payment_Model_Method
     public function enabledMSI()
     {
         return ( (int)trim($this->getConfigData("msi")) == 1 ? true : false );
-    }    
+    }
+
+    public function tDSecureConfig()
+    {
+        return $this->getConfigData('tdsecure');
+    }
+
+    public function addDataTreeDSecure()
+    {
+        $sessionCheckout = Mage::getSingleton('checkout/session');
+        $quoteId = $sessionCheckout->getQuoteId();
+        $quote = Mage::getModel("sales/quote")->load($quoteId);
+        $grandTotal = $quote->getData('grand_total');
+
+        $convertQuote = Mage::getSingleton('sales/convert_quote');
+        $order = $convertQuote->toOrder($quote);
+        $orderNumber = $order->getIncrementId();        
+
+        $info['idPedido'] = $orderNumber;
+        $info['prod'] = trim($this->getConfigData('prod'));
+        $info['idSucursal'] = trim($this->getConfigData('sucursalkey'));
+        $info['idUsuario'] = trim($this->getConfigData('usuariokey'));
+        $info['monto'] = $grandTotal;
+        $info['ipBuyer'] = $_SERVER['REMOTE_ADDR'];
+        $info['noMail'] = ((int)trim($this->getConfigData('notify')) == 1 ? 0 : 1 );
+        $info['plan'] = ( (int)trim($this->getConfigData('msi')) == 1 ? ($info['mensualidades'] == '00' ? 'NOR' : 'MSI' ) : 'NOR' );
+
+        return $info;
+    }
+
+    public function encryptedKey()
+    {
+
+        return $this->getConfigData('encriptacionkey');
+
+    }
+    
 }

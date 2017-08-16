@@ -64,11 +64,10 @@ class Pagofacil_Pagofacildirect_Model_Api
 
         $info['url'] = $this->_urlProd;
         // determinar si el entorno es para pruebas
+        
         if ($info['prod'] == '0')
         {
             $info['url'] = $this->_urlDemo;
-            $info['idSucursal'] = $this->_sucursalKeyDemo;
-            $info['idUsuario'] = $this->_usuarioKeyDemo;
         }
 
         // datos para la peticion del servicio
@@ -152,8 +151,6 @@ class Pagofacil_Pagofacildirect_Model_Api
         if ($info['prod'] == '0')
         {
             $info['url'] = 'https://stapi.pagofacil.net/cash/charge';
-            $info['branch_key'] = $this->_sucursalKeyDemo;
-            $info['user_key'] = $this->_usuarioKeyDemo;
         }
 
         // datos para la peticion del servicio

@@ -1,0 +1,93 @@
+<?php
+
+/*
+ * Verifica si existe 3ds configurado en el admin
+ */
+$tdConfigurada = Mage::helper('pagofacildirect/Data')->verificaTDSecureConfig();
+
+$tdConfigurada = ($tdConfigurada == '1')?Mage::helper('pagofacildirect/Data')->datosAdicionalesTreeD():$tdConfigurada;
+
+$form_key = $this->getRequest()->getParam('form_key');
+
+$ambiente = $tdConfigurada['prod'];
+$showAction = (!$tdConfigurada)?'review.save();':'enviarPagoFacil3dSecure('.$ambiente.');';
+
+?>
+
+<button type="submit" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Place Order')) ?>" class="button btn-checkout" onclick="<?php echo $showAction ?>"><span><span><?php echo $this->__('Place Order') ?></span></span></button>
+
+<script type="text/javascript">
+
+	var input = document.createElement("input");
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "idSucursal");
+	input.setAttribute("value", "<?php echo $tdConfigurada['idSucursal']?>");
+	document.getElementById("co-payment-form").appendChild(input);
+
+	var input = document.createElement("input");
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "idUsuario");
+	input.setAttribute("value", "<?php echo $tdConfigurada['idUsuario']?>");
+	document.getElementById("co-payment-form").appendChild(input);
+
+	var input = document.createElement("input");
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "idUsuario");
+	input.setAttribute("value", "<?php echo $tdConfigurada['idUsuario']?>");
+	document.getElementById("co-payment-form").appendChild(input);
+
+	var input = document.createElement("input");
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "param1");
+	input.setAttribute("value", "<?php echo $form_key?>");
+	document.getElementById("co-payment-form").appendChild(input);
+
+	var input = document.createElement("input");
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "param2");
+	input.setAttribute("value", "param2");
+	document.getElementById("co-payment-form").appendChild(input);
+
+	var input = document.createElement("input");
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "plan");
+	input.setAttribute("value", "<?php echo $tdConfigurada['plan']?>");
+	document.getElementById("co-payment-form").appendChild(input);
+
+	var input = document.createElement("input");
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "monto");
+	input.setAttribute("value", "<?php echo $tdConfigurada['monto']?>");
+	document.getElementById("co-payment-form").appendChild(input);
+
+	var input = document.createElement("input");
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "idPedido");
+	input.setAttribute("value", "<?php echo 'ABC' ?>");
+	document.getElementById("co-payment-form").appendChild(input);
+
+	var input = document.createElement("input");
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "idServicio");
+	input.setAttribute("value", "<?php echo '3' ?>");
+	document.getElementById("co-payment-form").appendChild(input);
+
+	var input = document.createElement("input");
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "ip");
+	input.setAttribute("value", "<?php echo $tdConfigurada['ipBuyer']?>");
+	document.getElementById("co-payment-form").appendChild(input);
+
+	var input = document.createElement("input");
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "httpUserAgent");
+	input.setAttribute("value", "<?php echo $_SERVER['HTTP_USER_AGENT']  ?>");
+	document.getElementById("co-payment-form").appendChild(input);
+
+	var input = document.createElement("input");
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "noTransaccion");
+	input.setAttribute("value", "noTransaccion");
+	document.getElementById("co-payment-form").appendChild(input);
+
+</script>
