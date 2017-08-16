@@ -20,7 +20,7 @@ function enviarPagoFacil3dSecure(ambiente){
         break;
         case 0:
         	//2 sanbox
-            var send = 'https://stapi.pagofacil.net/B3DS/Index/index';
+            var send = 'https://stcore.pagofacil.net/B3DS/Index/index';
         break;
     }
 
