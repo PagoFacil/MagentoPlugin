@@ -11,13 +11,13 @@ class Pagofacil_Pagofacildirect_Model_Api
      * URL del servicio de PagoFacil para pruebas
      * @var string
      */
-    protected $_urlDemo = 'https://stapi.pagofacil.net/Wsrtransaccion/index/format/json';
+    protected $_urlDemo = 'https://sandbox.pagofacil.tech/Wsrtransaccion/index/format/json';
     
     /**
      * URL del servicio de PagoFacil en ambiente de produccion
      * @var string 
      */
-    protected $_urlProd = 'https://www.pagofacil.net/ws/public/Wsrtransaccion/index/format/json';
+    protected $_urlProd = 'https://api.pagofacil.tech/Wsrtransaccion/index/format/json';
 
     /**
      * Clave de sucursal para el entorno de pruebasa(STAGE)
@@ -146,11 +146,11 @@ class Pagofacil_Pagofacildirect_Model_Api
             throw new Exception('parameter is not an array');
         }
 
-        $info['url'] = 'https://www.pagofacil.net/ws/public/cash/charge';
+        $info['url'] = 'https://api.pagofacil.tech/cash/charge';
         // determinar si el entorno es para pruebas
         if ($info['prod'] == '0')
         {
-            $info['url'] = 'https://stapi.pagofacil.net/cash/charge';
+            $info['url'] = 'https://sandbox.pagofacil.tech/cash/charge';
         }
 
         // datos para la peticion del servicio
