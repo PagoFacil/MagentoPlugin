@@ -170,9 +170,7 @@ class Pagofacil_Pagofacildirect_Model_CashCP extends Mage_Payment_Model_Method_A
     
     public function getProviders()
     {
-        $url = 'https://stapi.compropago.com/v1/providers/';
-        $url.= 'true';
-
+        $url = 'https://api.pagofacil.tech/cash/Rest_Conveniencestores';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -182,34 +180,20 @@ class Pagofacil_Pagofacildirect_Model_CashCP extends Mage_Payment_Model_Method_A
         $this->_response = curl_exec($ch);
         curl_close($ch);
 
-        $response = json_decode($this->_response, true);
-
-        if ($response['type'] == "error") {
-            $errorMessage = $response['message'] . "\n";
+        $arrTiendas = json_decode($this->_response, true);
+        if (empty($arrTiendas)) {
+            $errorMessage = "no se encontraron tiendas disponibles" . "\n";
             Mage::throwException($errorMessage);
         }
-
-        $hash = array();
-
-        foreach ($response as $record) {
-            $hash[$record['rank']] = $record;
+        $arrProveedores = array();
+        $i = 0;
+        foreach ($arrTiendas["records"] as $tienda) {
+            $arrProveedores[$i] = array(
+                "internal_name" => $tienda["code"], "name" => $tienda["name"]
+            );
+            $i++;
         }
-
-        ksort($hash);
-
-        $records = array();
-
-        foreach ($hash as $record) {
-            $records[] = $record;
-        }
-        $storeConveinience = array("OXXO", "SEVEN_ELEVEN", "FARMACIA_ESQUIVAR", "EXTRA", "FARMACIA_ESQUIVAR", "CHEDRAUI");
-        foreach ($records as $id => $record) {
-            if (!in_array($record["internal_name"], $storeConveinience)) {
-                unset($records[$id]);
-            }
-        }
-
-        return $records;
+        return $arrProveedores;
     }   
 }
 
