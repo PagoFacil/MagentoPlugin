@@ -12,7 +12,7 @@ class Pagofacil_Pagofacildirect_Model_Standard extends Mage_Payment_Model_Method
     protected $_canUseForMultiShipping = false;    
     protected $_canUseInternal         = false;
     protected $_isInitializeNeeded     = true;
-    
+    protected $_url                    = false;
     
     public function assignData($data)
     {
@@ -69,8 +69,8 @@ class Pagofacil_Pagofacildirect_Model_Standard extends Mage_Payment_Model_Method
     public function initialize($paymentAction, $stateObject)
     {
         parent::initialize($paymentAction, $stateObject);
-        
-        if($paymentAction != 'sale')
+
+        if($paymentAction != 'sale' || $this->tDSecureConfig())
         {
             return $this;
         }
@@ -138,6 +138,32 @@ class Pagofacil_Pagofacildirect_Model_Standard extends Mage_Payment_Model_Method
         return $this;
     }
     
+    /**
+    * Return Order place redirect url
+    *
+    * @return string
+    */
+    public function getOrderPlaceRedirectUrl()
+    {
+
+        $infoInstance = $this->getInfoInstance();
+        $info = unserialize($infoInstance->decrypt($infoInstance->getAdditionalData()));
+
+        $this->dataAdd = $this->addDataTreeDSecure();
+
+        $data = array_merge($info,$this->dataAdd);
+        $data['idServicio'] = 3;
+        $params = http_build_query($data) . "\n";
+
+        if ($this->tDSecureConfig() && $params) {
+
+            $_url =  Mage::getUrl('pagofacildirect/webhook/threedsecurepf/', array('params' => $params));
+
+        }
+
+        return $_url;
+    }
+
     public function getBillingInfo()
     {
         $sessionCheckout = Mage::getSingleton('checkout/session');
@@ -166,6 +192,11 @@ class Pagofacil_Pagofacildirect_Model_Standard extends Mage_Payment_Model_Method
         return $this->getConfigData('tdsecure');
     }
 
+    public function enviromentConfig()
+    {
+        return $this->getConfigData('prod');
+    }
+
     public function addDataTreeDSecure()
     {
         $sessionCheckout = Mage::getSingleton('checkout/session');
@@ -182,6 +213,7 @@ class Pagofacil_Pagofacildirect_Model_Standard extends Mage_Payment_Model_Method
         $info['idSucursal'] = trim($this->getConfigData('sucursalkey'));
         $info['idUsuario'] = trim($this->getConfigData('usuariokey'));
         $info['monto'] = $grandTotal;
+
         $info['ipBuyer'] = $_SERVER['REMOTE_ADDR'];
         $info['noMail'] = ((int)trim($this->getConfigData('notify')) == 1 ? 0 : 1 );
         $info['plan'] = ( (int)trim($this->getConfigData('msi')) == 1 ? ($info['mensualidades'] == '00' ? 'NOR' : 'MSI' ) : 'NOR' );

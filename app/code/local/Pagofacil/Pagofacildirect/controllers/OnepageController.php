@@ -1,5 +1,4 @@
 <?php
-
 class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controller_Action
 {
     /**
@@ -12,12 +11,10 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         'shipping-method' => '_getShippingMethodsHtml',
         'review'          => '_getReviewHtml',
     );
-
     /**
      * @var Mage_Sales_Model_Order
      */
     protected $_order;
-
     /**
      * Predispatch: should set layout area
      *
@@ -27,22 +24,18 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
     {
         parent::preDispatch();
         $this->_preDispatchValidateCustomer();
-
         $checkoutSessionQuote = Mage::getSingleton('checkout/session')->getQuote();
         if ($checkoutSessionQuote->getIsMultiShipping()) {
             $checkoutSessionQuote->setIsMultiShipping(false);
             $checkoutSessionQuote->removeAllAddresses();
         }
-
         if (!$this->_canShowForUnregisteredUsers()) {
             $this->norouteAction();
             $this->setFlag('',self::FLAG_NO_DISPATCH,true);
             return;
         }
-
         return $this;
     }
-
     /**
      * Send Ajax redirect response
      *
@@ -56,7 +49,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
             ->sendResponse();
         return $this;
     }
-
     /**
      * Validate ajax request and redirect on failure
      *
@@ -80,7 +72,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         }
         return false;
     }
-
     /**
      * Get shipping method step html
      *
@@ -96,7 +87,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         $output = $layout->getOutput();
         return $output;
     }
-
     /**
      * Get payment method step html
      *
@@ -112,7 +102,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         $output = $layout->getOutput();
         return $output;
     }
-
     /**
      * Return block content from the 'checkout_onepage_additional'
      * This is the additional content for shipping method
@@ -130,7 +119,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         Mage::getSingleton('core/translate_inline')->processResponseBody($output);
         return $output;
     }
-
     /**
      * Get order review step html
      *
@@ -140,7 +128,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
     {
         return $this->getLayout()->getBlock('root')->toHtml();
     }
-
     /**
      * Get one page checkout model
      *
@@ -150,7 +137,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
     {
         return Mage::getSingleton('checkout/type_onepage');
     }
-
     /**
      * Checkout page
      */
@@ -170,7 +156,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
             $error = Mage::getStoreConfig('sales/minimum_order/error_message') ?
                 Mage::getStoreConfig('sales/minimum_order/error_message') :
                 Mage::helper('checkout')->__('Subtotal must exceed minimum order amount');
-
             Mage::getSingleton('checkout/session')->addError($error);
             $this->_redirect('checkout/cart');
             return;
@@ -183,7 +168,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         $this->getLayout()->getBlock('head')->setTitle($this->__('Checkout'));
         $this->renderLayout();
     }
-
     /**
      * Refreshes the previous step
      * Loads the block corresponding to the current step and sets it
@@ -198,11 +182,9 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
     {
         // previous step should never be null. We always start with billing and go forward
         $prevStep = $this->getRequest()->getParam('prevStep', false);
-
         if ($this->_expireAjax() || !$prevStep) {
             return null;
         }
-
         $layout = $this->getLayout();
         $update = $layout->getUpdate();
         /* Load the block belonging to the current step*/
@@ -213,7 +195,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         $this->getResponse()->setBody($output);
         return $output;
     }
-
     /**
      * Shipping method action
      */
@@ -225,7 +206,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         $this->loadLayout(false);
         $this->renderLayout();
     }
-
     /**
      * Review page action
      */
@@ -237,7 +217,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         $this->loadLayout(false);
         $this->renderLayout();
     }
-
     /**
      * Order success action
      */
@@ -248,7 +227,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
             $this->_redirect('checkout/cart');
             return;
         }
-
         $lastQuoteId = $session->getLastQuoteId();
         $lastOrderId = $session->getLastOrderId();
         $lastRecurringProfiles = $session->getLastRecurringProfileIds();
@@ -256,14 +234,12 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
             $this->_redirect('checkout/cart');
             return;
         }
-
         $session->clear();
         $this->loadLayout();
         $this->_initLayoutMessages('checkout/session');
         Mage::dispatchEvent('checkout_onepage_controller_success_action', array('order_ids' => array($lastOrderId)));
         $this->renderLayout();
     }
-
     /**
      * Failure action
      */
@@ -271,17 +247,13 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
     {
         $lastQuoteId = $this->getOnepage()->getCheckout()->getLastQuoteId();
         $lastOrderId = $this->getOnepage()->getCheckout()->getLastOrderId();
-
         if (!$lastQuoteId || !$lastOrderId) {
             $this->_redirect('checkout/cart');
             return;
         }
-
         $this->loadLayout();
         $this->renderLayout();
     }
-
-
     /**
      * Get additional info action
      */
@@ -289,7 +261,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
     {
         $this->getResponse()->setBody($this->_getAdditionalHtml());
     }
-
     /**
      * Address JSON
      */
@@ -301,7 +272,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         $addressId = $this->getRequest()->getParam('address', false);
         if ($addressId) {
             $address = $this->getOnepage()->getAddress($addressId);
-
             if (Mage::getSingleton('customer/session')->getCustomer()->getId() == $address->getCustomerId()) {
                 $this->_prepareDataJSON($address->toArray());
             } else {
@@ -309,7 +279,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
             }
         }
     }
-
     /**
      * Save checkout method
      */
@@ -318,14 +287,12 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         if ($this->_expireAjax()) {
             return;
         }
-
         if ($this->getRequest()->isPost()) {
             $method = $this->getRequest()->getPost('method');
             $result = $this->getOnepage()->saveCheckoutMethod($method);
             $this->_prepareDataJSON($result);
         }
     }
-
     /**
      * Save checkout billing address
      */
@@ -334,20 +301,16 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         if ($this->_expireAjax()) {
             return;
         }
-
         if ($this->isFormkeyValidationOnCheckoutEnabled() && !$this->_validateFormKey()) {
             return;
         }
-
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost('billing', array());
             $customerAddressId = $this->getRequest()->getPost('billing_address_id', false);
-
             if (isset($data['email'])) {
                 $data['email'] = trim($data['email']);
             }
             $result = $this->getOnepage()->saveBilling($data, $customerAddressId);
-
             if (!isset($result['error'])) {
                 if ($this->getOnepage()->getQuote()->isVirtual()) {
                     $result['goto_section'] = 'payment';
@@ -361,18 +324,15 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
                         'name' => 'shipping-method',
                         'html' => $this->_getShippingMethodsHtml()
                     );
-
                     $result['allow_sections'] = array('shipping');
                     $result['duplicateBillingInfo'] = 'true';
                 } else {
                     $result['goto_section'] = 'shipping';
                 }
             }
-
             $this->_prepareDataJSON($result);
         }
     }
-
     /**
      * Shipping address save action
      */
@@ -381,16 +341,13 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         if ($this->_expireAjax()) {
             return;
         }
-
         if ($this->isFormkeyValidationOnCheckoutEnabled() && !$this->_validateFormKey()) {
             return;
         }
-
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost('shipping', array());
             $customerAddressId = $this->getRequest()->getPost('shipping_address_id', false);
             $result = $this->getOnepage()->saveShipping($data, $customerAddressId);
-
             if (!isset($result['error'])) {
                 $result['goto_section'] = 'shipping_method';
                 $result['update_section'] = array(
@@ -401,7 +358,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
             $this->_prepareDataJSON($result);
         }
     }
-
     /**
      * Shipping method save action
      */
@@ -410,11 +366,9 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         if ($this->_expireAjax()) {
             return;
         }
-
         if ($this->isFormkeyValidationOnCheckoutEnabled() && !$this->_validateFormKey()) {
             return;
         }
-
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost('shipping_method', '');
             $result = $this->getOnepage()->saveShippingMethod($data);
@@ -427,7 +381,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
                           'quote'   => $this->getOnepage()->getQuote()));
                 $this->getOnepage()->getQuote()->collectTotals();
                 $this->_prepareDataJSON($result);
-
                 $result['goto_section'] = 'payment';
                 $result['update_section'] = array(
                     'name' => 'payment-method',
@@ -438,7 +391,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
             $this->_prepareDataJSON($result);
         }
     }
-
     /**
      * Save payment ajax action
      *
@@ -449,20 +401,16 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         if ($this->_expireAjax()) {
             return;
         }
-
         if ($this->isFormkeyValidationOnCheckoutEnabled() && !$this->_validateFormKey()) {
             return;
         }
-
         try {
             if (!$this->getRequest()->isPost()) {
                 $this->_ajaxRedirectResponse();
                 return;
             }
-
             $data = $this->getRequest()->getPost('payment', array());
             $result = $this->getOnepage()->savePayment($data);
-
             // get section and redirect data
             $redirectUrl = $this->getOnepage()->getQuote()->getPayment()->getCheckoutRedirectUrl();
             if (empty($result['error']) && !$redirectUrl) {
@@ -489,7 +437,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         }
         $this->_prepareDataJSON($result);
     }
-
     /**
      * Get Order by quoteId
      *
@@ -506,7 +453,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         }
         return $this->_order;
     }
-
     /**
      * Create invoice
      *
@@ -521,17 +467,14 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         /* @var $invoice Mage_Sales_Model_Service_Order */
         $invoice = Mage::getModel('sales/service_order', $this->_getOrder())->prepareInvoice($items);
         $invoice->setEmailSent(true)->register();
-
         Mage::register('current_invoice', $invoice);
         return $invoice;
     }
-
     /**
      * Create order action
      */
     public function saveOrderAction($data)
     {
-     
         $result = array();
         try {
             $requiredAgreements = Mage::helper('checkout')->getRequiredAgreementIds();
@@ -546,7 +489,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
                     return;
                 }
             }
-
             if ($data) {
                 $data['checks'] = Mage_Payment_Model_Method_Abstract::CHECK_USE_CHECKOUT
                     | Mage_Payment_Model_Method_Abstract::CHECK_USE_FOR_COUNTRY
@@ -556,34 +498,42 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
                 $this->getOnepage()->getQuote()->getPayment()->importData($data);
             }
             $this->getOnepage()->saveOrder();
-
             $redirectUrl = $this->getOnepage()->getCheckout()->getRedirectUrl();
             $result['success'] = true;
             $result['error']   = false;
             
             Mage_Core_Controller_Varien_Action::_redirect( 'checkout/onepage/success' );
             return $this;
-
         }catch (Exception $e) {
             Mage::logException($e);
             Mage::helper('checkout')->sendPaymentFailedEmail($this->getOnepage()->getQuote(), $e->getMessage());
             $result['success']  = false;
             $result['error']    = true;
         }
+
         $this->getOnepage()->getQuote()->save();
+
+        /**
+         * change order status to 'Completed'
+         **/
+
+        $order = Mage::getModel('sales/order')->loadByIncrementId($data['idPedido']);
+        $order->setStatus('complete');
+        $order->save();
+
+        //$order->setState(Mage_Sales_Model_Order::STATE_COMPLETE, true)->save();
+        //echo Varien_Debug::backtrace(true, true); exit;
+
         /**
          * when there is redirect to third party, we don't want to save order yet.
          * we will save the order in return action.
          */
         Mage_Core_Controller_Varien_Action::_redirect('checkout/onepage/success', array('_secure'=>true));
-
         if (isset($redirectUrl)) {
             $result['redirect'] = $redirectUrl;
         }
-
         $this->_prepareDataJSON($result);
     }
-
     /**
      * Filtering posted data. Converting localized data if needed
      *
@@ -595,7 +545,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         $data = $this->_filterDates($data, array('dob'));
         return $data;
     }
-
     /**
      * Check can page show for unregistered users
      *
@@ -608,7 +557,6 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
             || Mage::helper('checkout')->isAllowedGuestCheckout($this->getOnepage()->getQuote())
             || !Mage::helper('checkout')->isCustomerMustBeLogged();
     }
-
     /**
      * Prepare JSON formatted data for response to client
      *
@@ -620,18 +568,14 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         $this->getResponse()->setHeader('Content-type', 'application/json', true);
         return $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($response));
     }
-
     public function threeDSecurePostAction($response){
-
         $resp = $this->getRequest()->getPost();
         $resp = $resp['response'];
-
         $objPF = new PagoFacil_Descifrado_Descifrar();
         
         $key = Mage::helper('pagofacildirect/Data')->keyEncrypted();
         
         $txtDesencripted = $objPF->desencriptar($resp, $key);
-
         $jsonDes = json_decode($txtDesencripted, true);
 
         if ($jsonDes['autorizado']>0)
@@ -652,22 +596,17 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
               'estado'         =>     $jsonDes['data']['estado'],
               'pais'           =>     $jsonDes['data']['pais'],
               'cp'             =>     $jsonDes['data']['cp'],
-              'email'          =>     $jsonDes['data']['email']
+              'email'          =>     $jsonDes['data']['email'],
+              'idPedido'       =>     $jsonDes['data']['idPedido']
             );
-
             $this->saveOrderAction($data);
-
         }else{
         
             Mage_Core_Controller_Varien_Action::_redirect( 'checkout/onepage/failure' );
-
             return $this;
         }
-
     }
-
 }
-
 /*
  * Clase para el desencriptado del post 3dSecure Banorte
  *
@@ -688,13 +627,11 @@ class PagoFacil_Descifrado_Descifrar
         }
         return "";
     }
-
     private static function pkcs5_pad ($text, $blocksize)
     {
         $pad = $blocksize - (strlen($text) % $blocksize);
         return $text . str_repeat(chr($pad), $pad);
     }
-
     private static function pkcs5_unpad($text)
     {
         $pad = ord($text{strlen($text)-1});
@@ -702,7 +639,6 @@ class PagoFacil_Descifrado_Descifrar
         if (strspn($text, chr($pad), strlen($text) - $pad) != $pad) return false;
         return substr($text, 0, -1 * $pad);
     }
-
     /**
      * This class uses by default hex2bin function, but it is only available since 5.4, because the current php version
      * is 5.2 this function was created with the purpose to replace the default function.
@@ -726,5 +662,4 @@ class PagoFacil_Descifrado_Descifrar
         }
         return $result;
     }
-
 }
