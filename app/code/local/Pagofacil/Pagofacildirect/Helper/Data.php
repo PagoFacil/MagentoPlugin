@@ -39,5 +39,14 @@ class Pagofacil_Pagofacildirect_Helper_Data extends Mage_Core_Helper_Abstract
     {
         return $this->tdsecure->encryptedKey();
     }
+    
+    /**
+     * Verifica si el ambiente es de producción o de pruebas
+     * return String
+     **/
+    public function verificaAmbiente()
+    {
+        return $this->tdsecure->enviromentConfig();
+    }
 
 }

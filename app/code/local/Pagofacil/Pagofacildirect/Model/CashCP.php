@@ -170,31 +170,31 @@ class Pagofacil_Pagofacildirect_Model_CashCP extends Mage_Payment_Model_Method_A
     
     public function getProviders()
     {
+
         $url = 'https://api.pagofacil.tech/cash/Rest_Conveniencestores';
+
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($ch, CURLOPT_USERPWD, ":");
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $this->_response = curl_exec($ch);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        $strResultado = curl_exec($ch);
         curl_close($ch);
 
-        $arrTiendas = json_decode($this->_response, true);
-        if (empty($arrTiendas)) {
-            $errorMessage = "no se encontraron tiendas disponibles" . "\n";
+        $respuesta = json_decode($strResultado,true);
+
+        if ($response['type'] == "error") {
+            $errorMessage = $response['message'] . "\n";
             Mage::throwException($errorMessage);
         }
-        $arrProveedores = array();
-        $i = 0;
-        foreach ($arrTiendas["records"] as $tienda) {
-            $arrProveedores[$i] = array(
-                "internal_name" => $tienda["code"], "name" => $tienda["name"]
-            );
-            $i++;
+
+        $stores = array();
+        foreach ($respuesta['records'] as $row) {
+            $stores[] = array('internal_name' => $row['code'] , "name" => $row['code']);
         }
-        return $arrProveedores;
+
+        return $stores;
     }   
+
 }
 
 ?>
