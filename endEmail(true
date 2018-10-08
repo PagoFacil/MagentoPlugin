@@ -1,0 +1,88 @@
+[1mdiff --git a/app/code/local/Pagofacil/Pagofacildirect/controllers/OnepageController.php b/app/code/local/Pagofacil/Pagofacildirect/controllers/OnepageController.php[m
+[1mindex e35fd33..f15da68 100644[m
+[1m--- a/app/code/local/Pagofacil/Pagofacildirect/controllers/OnepageController.php[m
+[1m+++ b/app/code/local/Pagofacil/Pagofacildirect/controllers/OnepageController.php[m
+[36m@@ -466,6 +466,7 @@[m [mclass Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll[m
+         }[m
+         /* @var $invoice Mage_Sales_Model_Service_Order */[m
+         $invoice = Mage::getModel('sales/service_order', $this->_getOrder())->prepareInvoice($items);[m
+[32m+[m[32m        $invoice->sendEmail(true, '');[m
+         $invoice->setEmailSent(true)->register();[m
+         Mage::register('current_invoice', $invoice);[m
+         return $invoice;[m
+[36m@@ -518,11 +519,38 @@[m [mclass Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll[m
+          **/[m
+ [m
+         $order = Mage::getModel('sales/order')->loadByIncrementId($data['idPedido']);[m
+[31m-        $order->setStatus('complete');[m
+[32m+[m
+[32m+[m[32m        $order->setStatus('processing');[m
+         $order->save();[m
+ [m
+[31m-        //$order->setState(Mage_Sales_Model_Order::STATE_COMPLETE, true)->save();[m
+[31m-        //echo Varien_Debug::backtrace(true, true); exit;[m
+[32m+[m
+[32m+[m[32m        if ($order->canInvoice())[m
+[32m+[m[32m        {[m
+[32m+[m[32m            Mage::log('caninvoiceorder', null, 'system.log');[m
+[32m+[m[32m            $invoice = $order->prepareInvoice();[m
+[32m+[m[32m            $invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::CAPTURE_OFFLINE);[m
+[32m+[m[32m            $invoice->sendEmail(true, '');[m
+[32m+[m[32m            $invoice->register();[m
+[32m+[m
+[32m+[m[32m            $order->setCustomerNoteNotify(true);[m
+[32m+[m[32m            $order->setIsInProcess(true);[m
+[32m+[m[32m            $order->addStatusHistoryComment('Automatically INVOICED by PagoFacil.', false);[m
+[32m+[m[32m            $order->getSendConfirmation(null);[m
+[32m+[m[32m            $order->sendNewOrderEmail();[m
+[32m+[m[32m            $transactionSave = Mage::getModel('core/resource_transaction');[m
+[32m+[m[32m            $transactionSave->addObject($invoice)->addObject($invoice->getOrder());[m
+[32m+[m[32m            $transactionSave->save();[m
+[32m+[m[32m        }[m
+[32m+[m[32m        $shipment = $order->prepareShipment();[m
+[32m+[m[32m        $shipment->register();[m
+[32m+[m[41m        [m
+[32m+[m[32m        $order->setCustomerNoteNotify(true);[m
+[32m+[m[32m        $order->setIsInProcess(true);[m
+[32m+[m[32m        $order->addStatusHistoryComment('Automatically SHIPPED by PagoFacil.', false);[m
+[32m+[m[41m        [m
+[32m+[m[32m        $transactionSaves = Mage::getModel('core/resource_transaction');[m
+[32m+[m[32m        $transactionSaves->addObject($shipment)->addObject($shipment->getOrder());[m
+[32m+[m[32m        $transactionSaves->save();[m
+ [m
+         /**[m
+          * when there is redirect to third party, we don't want to save order yet.[m
+[36m@@ -534,6 +562,7 @@[m [mclass Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll[m
+         }[m
+         $this->_prepareDataJSON($result);[m
+     }[m
+[32m+[m
+     /**[m
+      * Filtering posted data. Converting localized data if needed[m
+      *[m
+[36m@@ -545,6 +574,7 @@[m [mclass Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll[m
+         $data = $this->_filterDates($data, array('dob'));[m
+         return $data;[m
+     }[m
+[32m+[m
+     /**[m
+      * Check can page show for unregistered users[m
+      *[m
+[36m@@ -557,6 +587,7 @@[m [mclass Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll[m
+             || Mage::helper('checkout')->isAllowedGuestCheckout($this->getOnepage()->getQuote())[m
+             || !Mage::helper('checkout')->isCustomerMustBeLogged();[m
+     }[m
+[32m+[m
+     /**[m
+      * Prepare JSON formatted data for response to client[m
+      *[m
+[36m@@ -568,7 +599,8 @@[m [mclass Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll[m
+         $this->getResponse()->setHeader('Content-type', 'application/json', true);[m
+         return $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($response));[m
+     }[m
+[31m-    public function threeDSecurePostAction($response){[m
+[32m+[m
+[32m+[m[32m    public function threeDSecurePostAction(){[m
+         $resp = $this->getRequest()->getPost();[m
+         $resp = $resp['response'];[m
+         $objPF = new PagoFacil_Descifrado_Descifrar();[m
