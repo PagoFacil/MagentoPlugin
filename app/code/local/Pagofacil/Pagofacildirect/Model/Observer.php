@@ -4,6 +4,9 @@
  */
 class Pagofacil_Pagofacildirect_Model_Observer
 {    
+    
+    const STATE_PENDING_PAYMENT = 'pending_payment';
+
     public function orderPlaceAfter($event)
     {    
         $order = $event->getOrder();
@@ -42,14 +45,16 @@ class Pagofacil_Pagofacildirect_Model_Observer
             {                
                 $this->shippedOrder($order); // envia(shipped)
             }
-            $status = Mage_Sales_Model_Order::STATE_PROCESSING;
+        }else{
+
+            $status = Mage_Sales_Model_Order::Mage_Sales_Model_Order::STATE_PENDING_PAYMENT;
+            $order->setState($status, true);
+            $order->save();
         }
-        $order->setState($status, true);
-        $order->save();
         
         return $this;
     }    
-        
+
     private function invoicedOrder($order)
     {        
         if ($order->canInvoice())
