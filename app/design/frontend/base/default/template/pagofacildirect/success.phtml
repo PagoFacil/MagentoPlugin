@@ -19,6 +19,7 @@
       $amount = Mage::getSingleton('core/session')->getAmount();
       $reference = Mage::getSingleton('core/session')->getReference();
       $name = Mage::getSingleton('core/session')->getNameItem();
+      $Convenio = Mage::getSingleton('core/session')->getConvenio();
 ?>
 
 <?php if ($this->getOrderId()):?>
@@ -40,7 +41,7 @@
               <div class="cp-num">1.</div> <span> Ir a la caja <?php echo $this->__($convenience_store) ?> de <?php echo $this->__($store_schedule) ?> </span> <img src="<?php echo $this->__($store_image) ?>" class="cp-image-store" />
         </div>
         <div class="cp-step">
-              <div class="cp-num">2.</div> Solicitar depósito a cuenta (debito): <?php echo $this->__($bank) ?> - <?php echo $this->__($bank_account_number) ?>
+              <div class="cp-num">2.</div> Solicitar depósito <?php if ($this->__($convenience_store)=='SEVEN_ELEVEN'){ echo 'Convenio No. '.$this->__($convenio); }?> a cuenta (debito): <?php echo $this->__($bank) ?> - <?php echo $this->__($bank_account_number) ?>
         </div>
         <div class="cp-step">
             <div class="cp-num">3.</div> Deposita la cantidad <b>EXACTA</b> de: $<b><?php echo $this->__($amount) ?></b>

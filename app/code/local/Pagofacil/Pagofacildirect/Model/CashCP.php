@@ -152,6 +152,7 @@ class Pagofacil_Pagofacildirect_Model_CashCP extends Mage_Payment_Model_Method_A
             $expiration_date = $response['charge']['expiration_date']; 
             $amount = $response['charge']['amount'];
             $reference = $response['charge']['reference'];        
+            $agreement_number = $response['charge']['agreement_number'];
 
             Mage::getSingleton('core/session')->setConvenienceStore($convenience_store);
             Mage::getSingleton('core/session')->setStoreFixedRate($store_fixed_rate);
@@ -163,6 +164,7 @@ class Pagofacil_Pagofacildirect_Model_CashCP extends Mage_Payment_Model_Method_A
             Mage::getSingleton('core/session')->setAmount($amount);
             Mage::getSingleton('core/session')->setReference($reference);
             Mage::getSingleton('core/session')->setNameItem($name);
+            Mage::getSingleton('core/session')->setConvenio($agreement_number);
         }
                 
         return $this;
