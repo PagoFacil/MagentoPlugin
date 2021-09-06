@@ -47,7 +47,7 @@ class Pagofacil_Pagofacildirect_Model_Observer
             }
         }else{
 
-            $status = Mage_Sales_Model_Order::Mage_Sales_Model_Order::STATE_PENDING_PAYMENT;
+            $status = Mage_Sales_Model_Order::STATE_PENDING_PAYMENT;
             $order->setState($status, true);
             $order->save();
         }
