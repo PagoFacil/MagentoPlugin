@@ -26,7 +26,7 @@ class Pagofacil_Pagofacildirect_Model_Api
      * @var string 
      */
     
-    protected $_urlProd = 'https://api.pagofacil.tech/Wsrtransaccion/index/format/json?method=transaccion'
+    protected $_urlProd = 'https://api.pagofacil.tech/Wsrtransaccion/index/format/json?method=transaccion';
 
     /**
      * consume el servicio de pago de PagoFacil
