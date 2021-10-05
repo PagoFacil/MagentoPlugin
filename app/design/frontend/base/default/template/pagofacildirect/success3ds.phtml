@@ -1,0 +1,15 @@
+
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/pagofacil/pagofacil.css'); ?>" />
+<link href="<?php echo $this->getSkinUrl('css/pagofacil/pagofacil.css'); ?>" rel="stylesheet" type="text/css" media="screen, print" />
+
+<?php  if ($this->Responde() == 0):?>
+    <div class="page-title">
+        <h3>Error! Ha ocurrido un error con la transacción.</h3>
+    </div>
+<?php  else :?> 
+    <div class="page-title">
+    <h3>¡Felicitaciones! Su pedido ha sido generado correctamente.</h3>
+</div>
+<?php endif;?>
+
+
