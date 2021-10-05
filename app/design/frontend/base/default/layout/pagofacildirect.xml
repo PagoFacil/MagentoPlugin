@@ -67,7 +67,16 @@
          </reference>
      </checkout_onepage_success>
 
-
+     <reference name="root">
+        <action method="setTemplate">
+            <template>page/1column.phtml</template>
+        </action>
+        </reference>
+        <reference name="content">
+            <block type="pagofacildirect/success3ds" name="pagofacildirect.success3ds" ></block>
+            <block type="checkout/onepage_success" name="checkout.success" template="checkout/success.phtml"/>
+    </reference>
+        
     <pagofacildirect_webhook_threedsecurepf>
             <reference name="content">
                 <action method="setTemplate"><template>page/1columns-right.phtml</template></action>
