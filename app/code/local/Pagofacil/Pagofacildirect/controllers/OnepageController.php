@@ -522,9 +522,7 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
         $order = Mage::getModel('sales/order')->loadByIncrementId($data['idPedido']);
 
         $order->setStatus('processing');
-        $order->save();
-
-
+    
         if ($order->canInvoice())
         {
             Mage::log('caninvoiceorder', null, 'system.log');
@@ -538,20 +536,22 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
             $order->addStatusHistoryComment('Automatically INVOICED by PagoFacil.', false);
             $order->getSendConfirmation(null);
             $order->sendNewOrderEmail();
-            $transactionSave = Mage::getModel('core/resource_transaction');
+            /*$transactionSave = Mage::getModel('core/resource_transaction');
             $transactionSave->addObject($invoice)->addObject($invoice->getOrder());
-            $transactionSave->save();
+            $transactionSave->save();*/
+            $order->save();
         }
-        $shipment = $order->prepareShipment();
-        $shipment->register();
+        /*$shipment = $order->prepareShipment();
+        $shipment->register();*/
         
         $order->setCustomerNoteNotify(true);
         $order->setIsInProcess(true);
         $order->addStatusHistoryComment('Automatically SHIPPED by PagoFacil.', false);
         
-        $transactionSaves = Mage::getModel('core/resource_transaction');
+        /*$transactionSaves = Mage::getModel('core/resource_transaction');
         $transactionSaves->addObject($shipment)->addObject($shipment->getOrder());
-        $transactionSaves->save();
+        $transactionSaves->save();*/
+        $order->save();
 
         /**
          * when there is redirect to third party, we don't want to save order yet.
