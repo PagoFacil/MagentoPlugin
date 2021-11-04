@@ -521,7 +521,7 @@ class Pagofacil_Pagofacildirect_OnepageController extends Mage_Checkout_Controll
 
         $order = Mage::getModel('sales/order')->loadByIncrementId($data['idPedido']);
 
-        $order->setStatus('processing');
+        $order->setStatus('pending');
     
         if ($order->canInvoice())
         {
